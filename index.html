@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Text Display & Editor</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f7f7f7;
+            color: #333;
+            text-align: center;
+            padding: 20px;
+        }
+        #displayText {
+            font-size: 24px;
+            margin-bottom: 20px;
+        }
+        #textInput {
+            width: 80%;
+            padding: 10px;
+            font-size: 16px;
+            border: 2px solid #ccc;
+            border-radius: 5px;
+            margin-bottom: 20px;
+        }
+        #editButton {
+            padding: 10px 20px;
+            font-size: 16px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <h1>Welcome to Text Display & Editor</h1>
+    
+    <!-- Display the text content from URL parameter -->
+    <div id="displayText"></div>
+
+    <!-- Input field for editing text -->
+    <textarea id="textInput" placeholder="Enter or edit text"></textarea>
+    
+    <!-- Button to update the displayed text -->
+    <button id="editButton">Update Text</button>
+
+    <script>
+        // Function to extract text from URL parameter
+        function getTextFromUrl() {
+            const urlParams = new URLSearchParams(window.location.search);
+            return urlParams.get('text');
+        }
+
+        // Function to update displayed text with the provided text
+        function updateDisplayedText(text) {
+            const displayTextElement = document.getElementById('displayText');
+            displayTextElement.textContent = text;
+        }
+
+        // Function to handle editing and updating text
+        function handleTextEditing() {
+            const textInput = document.getElementById('textInput');
+            const editButton = document.getElementById('editButton');
+
+            // Set initial text content from URL parameter
+            let initialText = getTextFromUrl();
+            updateDisplayedText(initialText);
+            textInput.value = initialText;
+
+            // Event listener for edit button click
+            editButton.addEventListener('click', () => {
+                const newText = textInput.value.trim();
+                updateDisplayedText(newText);
+                
+                // Update URL parameter with new text (optional)
+                const urlParams = new URLSearchParams(window.location.search);
+                urlParams.set('text', newText);
+                const newUrl = window.location.pathname + '?' + urlParams.toString();
+                history.pushState({}, '', newUrl);
+            });
+        }
+
+        // Call the text editing function when the page loads
+        document.addEventListener('DOMContentLoaded', handleTextEditing);
+    </script>
+</body>
+</html>
